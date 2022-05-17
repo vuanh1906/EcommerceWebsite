@@ -1,0 +1,165 @@
+﻿@model EcommerceWeb.Models.Products
+
+@{
+    ViewData["Title"] = "Details";
+
+}
+@using EcommerceWeb.Utility
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+
+     List<Products> products = HttpContextAccessor.HttpContext.Session.Get<List<Products>>("products");
+    Products product = null;
+    if (products != null)
+    {
+        product = products.FirstOrDefault(c => c.Id == Model.Id);
+    }
+    
+
+    
+}
+<br />
+
+<h2 class="text-info">Product Details</h2>
+<form asp-action="Details" method="post" enctype="multipart/form-data">
+    <div class="p-4 rounded border row">
+        <div asp-validation-summary="ModelOnly" class="text-danger">
+
+        </div>
+        <div class="col-8">
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Name"></label>
+                </div>
+                <div class="col-8">
+                    <input type="hidden" asp-for="Id" />
+                    <input asp-for="Name" readonly="readonly" class="form-control" />
+                </div>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="Price"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Price" readonly="readonly" class="form-control" />
+                </div>
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="ProductColor"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="ProductColor" readonly="readonly" class="form-control" />
+                </div>
+                <span asp-validation-for="ProductColor" class="text-danger"></span>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-4">
+                    <label asp-for="ProductTypeId"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="ProductTypes.ProductType" readonly="readonly" class="form-control" />
+                </div>
+                <span asp-validation-for="ProductTypeId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-4">
+
+                </div>
+                <div class="col-8">
+                    @if (product != null)
+                    {
+                        <button type="submit" class="btn btn-danger form-control" asp-action="Remove" asp-route-id="@Model.Id">Remove to Cart</button>
+                    }
+                    else if(@Model.IsAvailable)
+                    {
+                        <input type="submit" class="btn btn-info form-control" value="Add to Cart" />
+                    }else if (!@Model.IsAvailable)
+                    {
+                        <input type="submit" class="btn btn-info form-control" value="Contact Shop" disabled/>
+                    }
+
+                </div>
+
+            </div>
+            <div class="form-group">
+                <a asp-action="Index" class="btn btn-success">Back to List</a>
+            </div>
+        </div>
+        <div class="col-1"></div>
+        <div class="col-3">
+            <img src="~/Image/@Model.ImageName" width="100%" height="250px" style="border-radius: 5px;border: 1px solid #efefef" />
+            <br />
+            @if(@Model.IsAvailable){
+                <img src="~/Image/instock.jpg" width="100%" height="50px">
+            }else{
+                <img src="~/Image/outstock.jpg" width="100%" height="50px">
+            }
+        </div>
+
+    </div>
+</form>
+
+<div> 
+    <div class="p-4 rounded border row">
+
+     <h4>About this product</h4>
+
+        @foreach (Comment comment in ViewBag.Comments ) {
+
+          string date = comment.CreatedDate.ToString("yyyy-MM-dd");
+            
+            <div class ="card card-outline-secondary my-4"> 
+              
+                <div class = "card-body">
+                   
+                    <p> @comment.content </p>
+                   
+                    <small class ="text-muted"> Posted in @date by @comment.author </small>
+                </div>
+            
+            </div>
+            
+
+        <hr/>
+
+        }
+        
+     
+     <form asp-controller="Home" asp-action ="addComment" method="post"> 
+          <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group row">
+                <label for="submitComment">Comment</label>
+                <textarea placeholder = "Write your comment here" class="form-control" id="submitComment" rows="3" name ="content"></textarea>
+            <div/>
+
+          
+            <div class="form-group row">
+                <div class="col-8">
+                    <input type = "hidden" asp-for="Id" readonly="readonly" class="form-control" name ="productId" />
+                </div>
+
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            
+
+            <input type="submit" value="Send" class="btn btn-primary" />
+            
+         
+         <br/> 
+         
+            
+     </form>
+    </div>
+</div>
+
+

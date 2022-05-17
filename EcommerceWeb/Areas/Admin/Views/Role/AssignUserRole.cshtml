@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewData["Title"] = "AssignUserRole";
+}
+
+<h1>AssignUserRole</h1>
+<div>
+    <table class="table table-striped border">
+        <tr class="table-info">
+            <th>
+               User Name
+            </th>
+
+            <th>Role Name</th>
+        </tr>
+        @foreach (var item in ViewBag.UserRoles)
+        {
+            <tr>
+                <td>@item.UserName</td>
+                <td>@item.RoleName</td>
+            </tr>
+        }
+    </table>
+</div>
+
+

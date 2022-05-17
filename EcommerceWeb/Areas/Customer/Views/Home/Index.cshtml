@@ -1,0 +1,75 @@
+﻿
+@model IEnumerable<EcommerceWeb.Models.Products>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+<br/><br/>
+
+<form>
+    <div class="row">
+        <div class="col">
+            <input type ="text" class="form-control" name="productName" placeholder = "Product name..." /> 
+        </div>
+        <div class="col">
+            <button class="btn btn-primary"> Search </button>
+        </div> 
+    </div> 
+    <br/>
+
+
+    <div class ="row" > 
+        <div > 
+            
+            <select asp-route-sortOrder="@ViewBag.Order"  name="sortOrder" id = "sortmenu" value={selected}>
+                  <option value="default"> Default </option> 
+                  <option  value="ascending">Low to High</option>
+                  <option  value="descending">High to Low</option>
+            </select>
+
+            <button class="btn btn-primary"> Apply </button>
+        </div>
+    </div>
+</form> 
+
+<br/> <br/>
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-4">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4 class="my-0 font-weight-normal">
+                        <label style="font-size: 23px;color: steelblue">@item.Name</label>
+                    </h4>
+                </div>
+                <img src="~/Image/@item.ImageName" alt="Product Image" class="card-img-top" style="height: 300px; max-width: 100%;"/>
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            @*<label style="font-size: 20px;color: #a51313"><b>Price :</b>  <b>@item.Price</b></label>*@
+                            <span id="price">                   
+                                @item.Price
+                            </span>
+                        </div>
+                        <a asp-action="Details" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-success pull-right btn-outline-info">Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@*
+@section scripts{
+    <script type="text/javascript">
+        <script>
+                                  var numUSD = new Intl.NumberFormat("vi", {
+                                      style: "currency",
+                                         currency: "VND"
+                                       })
+                                    
+                                    document.getElementById('price').innerHTML = numUSD.format(@item.Price);
+                                 </script>
+    </script>
+}*@
+
